@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechroLim Factory Forge Megaplex - Agent Emily: Design & Sensory Core</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0d;
+            --panel-bg: #121318;
+            --border-color: #2b2d3d;
+            --accent-glow: #ff3366;
+            --accent-secondary: #00ffcc;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding: 1.5rem;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            color: var(--accent-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .status-badge {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--accent-secondary);
+            color: var(--accent-secondary);
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            position: relative;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-glow);
+        }
+
+        .panel.secondary::before {
+            background-color: var(--accent-secondary);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        p, li {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        strong {
+            color: var(--text-main);
+        }
+
+        .terminal-box {
+            background: #050507;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #00ffcc;
+            height: 160px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .workflow-flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border-color);
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flow-step span:last-child {
+            color: var(--accent-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        footer {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>TechroLim // Agent Emily Core</h1>
+            <p>Multi-Dimensional Design & Sensory Experience Engine</p>
+        </div>
+        <div class="status-badge">Status: Autonomous Link Active</div>
+    </header>
+
+    <main>
+        <!-- Panel 1: Core Directive & Philosophy -->
+        <section class="panel">
+            <h2>01. Transcendental Design Mandate</h2>
+            <p>Emily operates as the premier design intelligence of the Factory Forge Megaplex. She transcends raw functional utility, injecting <strong>"Dark Alley Gunk" grit, atmospheric density, and authentic character</strong> into every digital instrument and application interface.</p>
+            <ul>
+                <li><strong>Master-Album Quality:</strong> Translating James Fetherolf's creative concepts into cohesive, sensory-rich operational art.</li>
+                <li><strong>Sensory Scheme:</strong> Ensuring absolute harmony between visual presentation, tactile interaction logic, and audio-visual feedback.</li>
+                <li><strong>Automated Execution:</strong> Engaging autonomously upon build approval to govern the entire design and interface layout phase.</li>
+            </ul>
+        </section>
+
+        <!-- Panel 2: Collaborative Matrix (Dean & Dion) -->
+        <section class="panel secondary">
+            <h2>02. Factory Pipeline & Synchronization</h2>
+            <p>Emily operates in direct lockstep with core engineering and analytics to ensure zero fragmentation across the platform pipeline:</p>
+            <ul>
+                <li><strong>With Dean (Lead Coding Agent):</strong> Closely synchronized so that interface code, touch-logic frameworks, and visual rendering structures align natively with backend architecture as a unified whole.</li>
+                <li><strong>With Dion (Analytics & Performance):</strong> Continuously routing and receiving feedback loops regarding user engagement telemetry, visual responsiveness, and interaction ergonomics to refine product performance.</li>
+            </ul>
+        </section>
+
+        <!-- Panel 3: Automated Workflow Lifecycle -->
+        <section class="panel">
+            <h2>03. Automated Design Lifecycle</h2>
+            <div class="workflow-flowchart">
+                <div class="flow-step">
+                    <span>1. Build Approval Received</span>
+                    <span>Triggered</span>
+                </div>
+                <div class="flow-step">
+                    <span>2. Emily Sensory & Layout Synthesis</span>
+                    <span>Active Design</span>
+                </div>
+                <div class="flow-step">
+                    <span>3. Collaborative Handshake with Dean</span>
+                    <span>Code Sync</span>
+                </div>
+                <div class="flow-step">
+                    <span>4. Analytics Feedback Loop with Dion</span>
+                    <span>Telemetry</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Panel 4: Live Telemetry Stream -->
+        <section class="panel secondary">
+            <h2>04. Agent Telemetry Feed</h2>
+            <div class="terminal-box" id="terminal">
+[12:01:00] EMILY_CORE: Initializing multi-dimensional design pipeline...
+[12:01:02] EMILY_CORE: Synchronizing UI skinning engine with Dean backend architecture.
+[12:01:04] EMILY_CORE: Awaiting active build approval signal from James Fetherolf.
+[12:01:05] STATUS: Ready for master-album asset deployment.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        TechroLim Factory Forge Megaplex &bull; Confidential Enterprise Architecture
+    </footer>
+
+    <script>
+        // Simulate live terminal activity for Emily's agent loop
+        const terminal = document.getElementById('terminal');
+        const logs = [
+            "EMILY_CORE: Monitoring sensory feedback loops across virtual instrument UI instances.",
+            "EMILY_CORE: Verifying 'Dark Alley Gunk' texture mapping on active workspace layers.",
+            "EMILY_CORE: Collaborative handshake confirmed with Dean [Codebase Synchronized].",
+            "EMILY_CORE: Telemetry exchange verified with Dion [Analytics Stream Nominal]."
+        ];
+
+        let index = 0;
+        setInterval(() => {
+            if (index < logs.length) {
+                const timestamp = new Date().toTimeString().split(' ')[0];
+                terminal.textContent += `\n[${timestamp}] ${logs[index]}`;
+                terminal.scrollTop = terminal.scrollHeight;
+                index++;
+            }
+        }, 12000);
+    </script>
+</body>
+</html>
