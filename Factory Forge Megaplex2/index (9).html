@@ -2,418 +2,333 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Factory Forge Megaplex - Master Studio</title>
-    <!-- Web App Manifest for Standalone APK & PWA installation -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkZhY3RvcnkgRm9yZ2UgTWVnYXBsZXgiLAogICJzaG9ydF9uYW1lIjogIk1lZ2FwbGV4IiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwZDE0IiwKICAidGhlbWVfY29sb3IiOiAiIzAwZjA2YyIKfQ==">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Forge Megaplex - Master Command Deck</title>
     <style>
         :root {
-            --bg-dark: #0b0d14;
-            --panel-bg: #121624;
-            --accent-cyan: #00f06c;
-            --accent-blue: #00d8ff;
-            --accent-pink: #ff007f;
-            --accent-purple: #9d00ff;
+            --bg-deep: #0a0b0e;
+            --surface: #12141c;
+            --surface-glass: rgba(18, 20, 28, 0.85);
+            --border: #232736;
+            --accent-orange: #ff6b00;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00ff66;
+            --accent-red: #ff3333;
             --text-main: #e2e8f0;
-            --text-muted: #64748b;
-            --border-color: #1e293b;
-            --font-mono: 'Courier New', Courier, monospace;
+            --text-dim: #94a3b8;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace; }
+        body { background: var(--bg-deep); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* Top Bar Telemetry */
-        header {
-            background: #07090e;
-            border-bottom: 1px solid var(--border-color);
-            padding: 8px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-        }
-        .brand { font-weight: bold; color: var(--accent-cyan); letter-spacing: 1px; }
-        .bus-status { display: flex; align-items: center; gap: 8px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4444; }
-        .status-dot.connected { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+        /* Navigation Header & Tabs */
+        header { background: var(--surface); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 1000; padding: 15px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        h1 { font-size: 1.2rem; color: var(--accent-orange); letter-spacing: 1px; text-transform: uppercase; }
+        
+        .status-pill { font-size: 0.75rem; background: rgba(0,255,102,0.1); color: var(--accent-green); padding: 4px 10px; border: 1px solid var(--accent-green); border-radius: 12px; }
+        
+        .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: thin; }
+        .tab-btn { background: var(--bg-deep); border: 1px solid var(--border); color: var(--text-dim); padding: 8px 14px; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 0.8rem; transition: all 0.2s; }
+        .tab-btn.active, .tab-btn:hover { background: var(--accent-orange); color: #000; border-color: var(--accent-orange); font-weight: bold; }
 
-        /* Navigation Bar */
-        nav {
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        nav button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-        nav button.active {
-            color: var(--accent-blue);
-            border-bottom-color: var(--accent-blue);
-            background: rgba(0, 216, 255, 0.05);
-        }
+        /* Factory Section Containers */
+        .factory-container { max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 30px; }
+        .section-card { background: var(--surface-glass); border: 1px solid var(--border); border-radius: 8px; padding: 20px; backdrop-filter: blur(10px); }
+        .section-title { font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Main Factory Floor Viewport */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        /* Grid Layouts for Labs & Offices */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        /* Section Containers */
-        .factory-zone {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 14px;
-        }
-        .zone-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
+        /* Control Boxes & Consoles */
+        textarea, input, select { width: 100%; background: var(--bg-deep); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 4px; margin-top: 8px; margin-bottom: 12px; font-size: 0.85rem; }
+        button.action-btn { background: var(--accent-orange); color: #000; border: none; padding: 10px 18px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; transition: opacity 0.2s; }
+        button.action-btn:hover { opacity: 0.85; }
 
-        /* Grid Layout for Split Panels & Desks */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .terminal-box { background: #000; border: 1px solid var(--border); padding: 12px; border-radius: 4px; height: 160px; overflow-y: auto; font-size: 0.75rem; color: var(--accent-green); margin-top: 10px; }
 
-        /* Code Editor & Dual Panels */
-        textarea, select, input {
-            width: 100%;
-            background: #080a0f;
-            border: 1px solid var(--border-color);
-            color: var(--accent-cyan);
-            font-family: var(--font-mono);
-            font-size: 12px;
-            padding: 8px;
-            border-radius: 4px;
-            outline: none;
-        }
-        textarea { height: 160px; resize: vertical; }
+        /* Bus & Pipeline Status Display */
+        .bus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .bus-node { background: var(--bg-deep); border: 1px solid var(--border); padding: 12px; border-radius: 6px; border-left: 4px solid var(--accent-cyan); }
+        .bus-node.secure { border-left-color: var(--accent-green); }
 
-        /* Interactive Crew Desks */
-        .crew-card {
-            background: #0c0f1a;
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .crew-name { font-weight: bold; font-size: 13px; color: var(--text-main); }
-        .crew-role { font-size: 11px; color: var(--text-muted); }
-        .btn-sm {
-            background: var(--border-color);
-            color: var(--text-main);
-            border: none;
-            padding: 4px 8px;
-            font-size: 11px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .btn-sm:hover { background: var(--accent-blue); color: #000; }
+        /* Briefcase Storage */
+        .briefcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .briefcase-slot { background: var(--bg-deep); border: 1px dashed var(--border); padding: 15px; border-radius: 6px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+        .briefcase-slot:hover { border-color: var(--accent-orange); }
 
-        /* Termux & CLI Output Window */
-        .cli-window {
-            background: #000;
-            color: #00ff66;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            padding: 10px;
-            border-radius: 4px;
-            height: 120px;
-            overflow-y: auto;
-            border: 1px solid #113311;
-        }
-
-        /* File Room & Briefcase Vault */
-        .vault-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
-        .briefcase {
-            background: #0e121e;
-            border: 1px dashed var(--accent-purple);
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 12px;
-        }
+        /* Smart Big Screen */
+        .big-screen { background: #050608; border: 2px solid var(--accent-orange); padding: 15px; border-radius: 6px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* Offline Mode Banner */
+        #offline-banner { display: none; background: var(--accent-red); color: #fff; text-align: center; padding: 6px; font-size: 0.8rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Header Telemetry & Bus Status -->
+    <div id="offline-banner">⚠️ OFFLINE CIRCUIT ENGAGED: Operating from Local Fallback Database</div>
+
     <header>
-        <div class="brand">FACTORY FORGE MEGAPLEX v3.5</div>
-        <div class="bus-status">
-            <div id="statusDot" class="status-dot"></div>
-            <span id="busText" style="color: var(--text-muted);">BUS: DISCONNECTED (8080)</span>
+        <div class="header-top">
+            <h1>Factory Forge Megaplex</h1>
+            <div id="system-status" class="status-pill">4 BUSES ACTIVE | SUPER PIPELINE: ONLINE</div>
+        </div>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="scrollToSection('bus-sec')">Bus Core & Security</button>
+            <button class="tab-btn" onclick="scrollToSection('code-lab')">Code Editor Lab</button>
+            <button class="tab-btn" onclick="scrollToSection('apk-lab')">APK Builder Lab</button>
+            <button class="tab-btn" onclick="scrollToSection('tool-lab')">Tool Maker Lab</button>
+            <button class="tab-btn" onclick="scrollToSection('offices-sec')">Offices & Desks</button>
+            <button class="tab-btn" onclick="scrollToSection('kiosk-screen')">Kiosk & Big Screen</button>
+            <button class="tab-btn" onclick="scrollToSection('fileroom-sec')">File Room & Briefcases</button>
+            <button class="tab-btn" onclick="scrollToSection('backdoor-sec')">Backdoor Search</button>
         </div>
     </header>
 
-    <!-- Navigation Hub -->
-    <nav>
-        <button class="active" onclick="scrollToZone('zones-all')">ALL ZONES</button>
-        <button onclick="scrollToZone('editor-zone')">RAUL CODER & GUNK</button>
-        <button onclick="scrollToZone('roster-zone')">CREW DESKS</button>
-        <button onclick="scrollToZone('apk-zone')">APK LAB</button>
-        <button onclick="scrollToZone('vox-zone')">VOXLAB DSP</button>
-        <button onclick="scrollToZone('vault-zone')">FILE VAULT</button>
-        <button onclick="scrollToZone('domain-zone')">DOMAINS</button>
-    </nav>
+    <div class="factory-container">
 
-    <!-- Main Factory Floor -->
-    <main id="zones-all">
-
-        <!-- Zone 1: Code Lab & Gunk Converter -->
-        <section id="editor-zone" class="factory-zone">
-            <div class="zone-title">
-                <span>Raul Coder Lab & Gunk Translator</span>
-                <span style="color: var(--accent-cyan); font-size: 11px;">Sheet Powder Enabled</span>
+        <!-- 1. BUS CORE & SUPER PIPELINE WITH JANUS, ALI & NATALIA -->
+        <section id="bus-sec" class="section-card">
+            <div class="section-title"><span>Bus Core Supervisor & Super Pipeline Security</span><span>Shield: Active</span></div>
+            <div class="bus-grid">
+                <div class="bus-node">
+                    <strong>BUS 1: Orchestration</strong><br><small>Lead: Dean | Port 8080</small>
+                </div>
+                <div class="bus-node secure">
+                    <strong>BUS 2: Telemetry & QA</strong><br><small>Lead: Janus (Pipeline Control) | Port 8081</small>
+                </div>
+                <div class="bus-node secure">
+                    <strong>BUS 3: Security & IT</strong><br><small>Leads: Ali & Natalia (Malware/Hack Defense) | Port 8082</small>
+                </div>
+                <div class="bus-node">
+                    <strong>BUS 4: Analytics & Assets</strong><br><small>Leads: Dion & Anita | Port 8083</small>
+                </div>
             </div>
+            <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim);">
+                Super Pipeline extends out from the factory core and loops back. Janus oversees outbound telemetry, pipeline integrity, and inbound payload verification alongside Ali & Natalia providing real-time anti-malware intrusion filtering.
+            </div>
+        </section>
+
+        <!-- 2. CODE EDITOR LAB -->
+        <section id="code-lab" class="section-card">
+            <div class="section-title"><span>Code Editor Lab</span><span>Lead: Dean | Team: Janus & Forge</span></div>
             <div class="grid-2">
                 <div>
-                    <label style="font-size: 11px; color: var(--text-muted);">Gunk Input Stream (@gunk, #trig, ~bind)</label>
-                    <textarea id="gunkInput" placeholder="@gunk(synth_trigger)&#10;~bind: #fret_04 -> !pitch(8080)&#10;#trig: @low_end(gain: 0.9)"></textarea>
-                    <button class="btn-sm" style="margin-top: 6px; width: 100%; background: var(--accent-blue); color: #000;" onclick="compileGunkCode()">COMPILE GUNK TO STANDARD</button>
+                    <label>Code Editor Command Box (Chat & Prompting before/during/after build):</label>
+                    <textarea id="code-prompt" rows="6" placeholder="Direct Dean, Janus, and Forge on app logic, automations, and workflow production..."></textarea>
+                    <button class="action-btn" onclick="runCodeLabBuild()">Execute Code Build</button>
                 </div>
                 <div>
-                    <label style="font-size: 11px; color: var(--text-muted);">Standard Target AST Output (Node.js/JS)</label>
-                    <textarea id="standardOutput" readonly placeholder="// Standard AST Output compiled from Master Index..."></textarea>
-                    <button class="btn-sm" style="margin-top: 6px; width: 100%;" onclick="dispatchToBus()">DISPATCH TO TERMUX BUS (8080)</button>
+                    <label>Live Terminal Command Box:</label>
+                    <div id="code-terminal" class="terminal-box">[DEAN READY]: Awaiting prompt for Real Apps, Real Tools, and Real Code production...</div>
                 </div>
             </div>
         </section>
 
-        <!-- Zone 2: Megaplex Crew Roster & Interactive Desks -->
-        <section id="roster-zone" class="factory-zone">
-            <div class="zone-title">Megaplex Command Roster & Interactive Desks</div>
-            <div class="grid-2" style="gap: 8px;">
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">James Fetherolf</div>
-                        <div class="crew-role">Director & Enterprise Lead</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('James')">Executive Override</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">Anita</div>
-                        <div class="crew-role">System Ops & Index Registry</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('Anita')">Query Index</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">Dean</div>
-                        <div class="crew-role">Workflow Orchestrator</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('Dean')">Assign Task</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">Janus</div>
-                        <div class="crew-role">Sheet Powder Gatekeeper</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('Janus')">Audit Sandbox</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">Forge</div>
-                        <div class="crew-role">Compiler & Architect</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('Forge')">Build AST</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">FLandangO</div>
-                        <div class="crew-role">Audio DSP Agent</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('FLandangO')">Sync VoxLab</button>
-                </div>
-                <div class="crew-card">
-                    <div>
-                        <div class="crew-name">Kyle</div>
-                        <div class="crew-role">Termux Execution Host</div>
-                    </div>
-                    <button class="btn-sm" onclick="triggerAgent('Kyle')">Ping Runtime</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Zone 3: Termux WebSocket CLI Engine -->
-        <section class="factory-zone">
-            <div class="zone-title">Termux Bus Terminal (ws://localhost:8080)</div>
-            <div id="cliOutput" class="cli-window">
-                [SYSTEM] Initializing Factory Forge Megaplex Runtime...<br>
-                [SYSTEM] Standalone WebApp/APK container ready.<br>
-            </div>
-        </section>
-
-        <!-- Zone 4: APK Compilation Lab -->
-        <section id="apk-zone" class="factory-zone">
-            <div class="zone-title">Automated APK Builder Lab</div>
+        <!-- 3. APK BUILDER LAB -->
+        <section id="apk-lab" class="section-card">
+            <div class="section-title"><span>APK Builder Lab</span><span>Native APK & Web App Production</span></div>
             <div class="grid-2">
                 <div>
-                    <input type="text" id="apkPackage" value="com.techrolim.megaplex" placeholder="Package Identifier">
-                    <button class="btn-sm" style="margin-top: 6px; width: 100%; background: var(--accent-pink); color: #fff;" onclick="generateAPKBuildSpec()">GENERATE APK BUILD MANIFEST</button>
+                    <label>APK Build Configuration & Chat Assistant:</label>
+                    <textarea id="apk-prompt" rows="5" placeholder="Configure native APK parameters, debugging rules, and testing parameters with Dean, Janus, and Forge..."></textarea>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="action-btn" onclick="triggerApkAction('Build')">Build APK</button>
+                        <button class="action-btn" style="background:var(--accent-cyan); color:#000;" onclick="triggerApkAction('Test')">Test Preview</button>
+                        <button class="action-btn" style="background:var(--accent-green); color:#000;" onclick="triggerApkAction('Publish')">Publish</button>
+                    </div>
                 </div>
-                <div style="font-size: 11px; color: var(--text-muted);">
-                    Target Platform: Android API 34+ (Mobile-First)<br>
-                    Compiler Bridge: GitHub Actions / Capacitor CLI<br>
-                    Output Format: Signed Standalone .APK / .AAB
+                <div>
+                    <label>APK Compilation & Installation Feed:</label>
+                    <div id="apk-terminal" class="terminal-box">[APK SYSTEM]: Ready for native compilation, debugging, and staging installation options.</div>
                 </div>
             </div>
         </section>
 
-        <!-- Zone 5: VoxLab Audio Studio -->
-        <section id="vox-zone" class="factory-zone">
-            <div class="zone-title">VoxLab Audio Studio & Fret-Trig FX</div>
+        <!-- 4. TOOL MAKER LAB -->
+        <section id="tool-lab" class="section-card">
+            <div class="section-title"><span>Tool Maker Lab</span><span>Technological Tool Generation</span></div>
+            <textarea id="tool-prompt" rows="3" placeholder="Design technological tools modeled after our high-performance tool lab mechanisms..."></textarea>
+            <button class="action-btn" onclick="runToolBuild()">Synthesize Tool</button>
+            <div id="tool-terminal" class="terminal-box" style="height: 100px;">[TOOL LAB]: Initialized for custom hardware/software tool fabrication.</div>
+        </section>
+
+        <!-- 5. OFFICES & INTERACTIVE DESKS -->
+        <section id="offices-sec" class="section-card">
+            <div class="section-title"><span>Secretary Anita's Office & Executive Desks</span></div>
             <div class="grid-2">
-                <button class="btn-sm" onclick="logCLI('[VoxLab] Low-Pass DSP Filter Applied: Cutoff 80Hz')">Set Low-End Bass Filter (41.2Hz)</button>
-                <button class="btn-sm" onclick="logCLI('[VoxLab] TechroTone Pitch Modulation Engaged')">Engage TechroTone Modulation</button>
+                <div>
+                    <h3 style="color:var(--accent-orange); font-size:0.9rem; margin-bottom:8px;">Anita's Office & Secretary Deck</h3>
+                    <p style="font-size: 0.8rem; color:var(--text-dim); margin-bottom:10px;">Managing scheduling, team coordination, message routing, and factory logistics.</p>
+                    <input type="text" id="anita-memo" placeholder="Send directive to Secretary Anita...">
+                    <button class="action-btn" onclick="sendAnitaMemo()">Log Memo</button>
+                    <div id="anita-log" class="terminal-box" style="height: 90px; margin-top:10px;">[ANITA]: Office online and actively managing queues.</div>
+                </div>
+                <div>
+                    <h3 style="color:var(--accent-cyan); font-size:0.9rem; margin-bottom:8px;">Interactive Executive Desks</h3>
+                    <div style="background:var(--bg-deep); padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
+                        <strong>James's Interactive Desk:</strong> Master command telemetry and peripheral interface active.
+                    </div>
+                    <div style="background:var(--bg-deep); padding:12px; border:1px solid var(--border); border-radius:4px;">
+                        <strong>Gemini's Interactive Desk:</strong> Agent memory indexing and assistant feedback loop online.
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Zone 6: File Room & Briefcase Vault -->
-        <section id="vault-zone" class="factory-zone">
-            <div class="zone-title">File Room & Storage Vault</div>
-            <div class="vault-grid">
-                <div class="briefcase">💼<br><strong>Core System</strong><br>master-index.json</div>
-                <div class="briefcase">💼<br><strong>Termux Node</strong><br>mcp-agent-node.js</div>
-                <div class="briefcase">💼<br><strong>Audio FX</strong><br>VoxLab Presets</div>
-                <div class="briefcase">💼<br><strong>APK Specs</strong><br>build-manifest.json</div>
+        <!-- 6. KIOSK & SMART BIG SCREEN -->
+        <section id="kiosk-screen" class="section-card">
+            <div class="section-title"><span>Company Kiosk & Smart Big Screen Drawing Board</span></div>
+            <div class="grid-2">
+                <div>
+                    <h3 style="color:var(--accent-orange); font-size:0.9rem; margin-bottom:8px;">Company Kiosk</h3>
+                    <p style="font-size: 0.8rem; color:var(--text-dim); margin-bottom:10px;">Project accounts, directory information, and credentials registry.</p>
+                    <div style="background:var(--bg-deep); padding:10px; border:1px solid var(--border); font-size:0.75rem;">
+                        - Active Enterprise: TechroLim / Factory Forge Megaplex<br>
+                        - Authorized Operative: James Fetherolf<br>
+                        - Security Clearance: Level 5 Master
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color:var(--accent-cyan); font-size:0.9rem; margin-bottom:8px;">Smart Big Screen / Drawing Board</h3>
+                    <div class="big-screen">
+                        <div id="drawing-board-text" style="font-size: 0.8rem; color: var(--accent-green);">[SYNCED]: All team nodes locked onto current Megaplex build sprint. Architecture stable.</div>
+                        <input type="text" id="board-update-input" placeholder="Broadcast note to Big Screen..." style="margin-bottom:0;">
+                    </div>
+                    <button class="action-btn" style="margin-top:10px;" onclick="updateBigScreen()">Update Big Screen</button>
+                </div>
             </div>
         </section>
 
-        <!-- Zone 7: Custom Domain Control Center -->
-        <section id="domain-zone" class="factory-zone">
-            <div class="zone-title">Domain Control & Subdomain Routing</div>
-            <input type="text" id="domainInput" value="megaplex.techrolim.com" placeholder="Enter Primary Domain Name">
-            <button class="btn-sm" style="margin-top: 6px; width: 100%;" onclick="bindDomain()">BIND DOMAIN & PERSIST CONFIG</button>
+        <!-- 7. FILE ROOM & PROGRAMMABLE BRIEFCASES -->
+        <section id="fileroom-sec" class="section-card">
+            <div class="section-title"><span>File Room & Programmable Briefcases</span><span>Body Sensor Handshake Protocol Active</span></div>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px;">
+                Large files, folders, and project archives stored in secure briefcases. Program options with custom instructions. Features biometric handshakes and <strong>Decline Secret Handshake</strong> (turn device flat for 5 seconds to abort/back out).
+            </p>
+            <div class="briefcase-grid">
+                <div class="briefcase-slot" onclick="openBriefcase('Core Codebase')">
+                    <strong>📁 Briefcase Alpha</strong><br><small>Core Codebase Archive</small>
+                </div>
+                <div class="briefcase-slot" onclick="openBriefcase('Agent Roster & Models')">
+                    <strong>📁 Briefcase Beta</strong><br><small>13 Agent Profiles</small>
+                </div>
+                <div class="briefcase-slot" onclick="openBriefcase('Offline DB Fallback')">
+                    <strong>📁 Briefcase Gamma</strong><br><small>Offline Storage Dump</small>
+                </div>
+            </div>
+            <div id="briefcase-status" style="margin-top:15px; font-size:0.8rem; color:var(--accent-cyan);">Status: Waiting for briefcase selection or sensor handshake...</div>
         </section>
 
-    </main>
+        <!-- 8. BACKDOOR SEARCH WINDOW -->
+        <section id="backdoor-sec" class="section-card">
+            <div class="section-title"><span>Backdoor Feature</span><span>Light-Duty Internet Search Window</span></div>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px;">Lightweight, light-duty auxiliary search interface connected externally.</p>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="backdoor-query" placeholder="Enter quick query..." style="margin-bottom:0;">
+                <button class="action-btn" onclick="runBackdoorSearch()">Search</button>
+            </div>
+            <div id="backdoor-results" style="margin-top: 10px; font-size: 0.80rem; background: var(--bg-deep); padding: 10px; border-radius: 4px; border: 1px solid var(--border);">
+                Results output will appear here...
+            </div>
+        </section>
 
-    <!-- Client-Side Operational Logic -->
+    </div>
+
     <script>
-        // WebSocket Bus Manager
-        let ws;
-        function connectBus() {
-            ws = new WebSocket('ws://localhost:8080');
-            ws.onopen = () => {
-                document.getElementById('statusDot').classList.add('connected');
-                document.getElementById('busText').textContent = 'BUS: CONNECTED (8080)';
-                logCLI('[BUS] Connected to Termux WebSocket server at ws://localhost:8080');
-            };
-            ws.onclose = () => {
-                document.getElementById('statusDot').classList.remove('connected');
-                document.getElementById('busText').textContent = 'BUS: DISCONNECTED (8080)';
-                setTimeout(connectBus, 5000);
-            };
-            ws.onerror = () => {
-                logCLI('[BUS WARNING] Local Termux WebSocket offline. Running in Local Standalone Mode.');
-            };
-            ws.onmessage = (event) => {
-                logCLI('[BUS RECEIVE] ' + event.data);
-            };
-        }
-
-        // Gunk Code Converter (Panel A to Panel B)
-        function compileGunkCode() {
-            const input = document.getElementById('gunkInput').value;
-            logCLI('[GUNK ENGINE] Parsing intent tokens & checking Sheet Powder sandbox...');
-            
-            // Basic Gunk AST Translation Mockup
-            let compiled = "// COMPILED FROM GUNK SHORTHAND\n";
-            compiled += "const bus = require('./server-bus-core');\n";
-            compiled += "const dsp = require('./audio-dsp-engine');\n\n";
-            
-            if (input.includes('synth_trigger')) {
-                compiled += "bus.emit('fret_trigger', { frequency: 41.2, gain: 0.9 });\n";
-            }
-            if (input.includes('low_end')) {
-                compiled += "dsp.setFilter('lowpass', { cutoff: 80, resonance: 0.9 });\n";
-            }
-            
-            document.getElementById('standardOutput').value = compiled;
-            logCLI('[SHEET POWDER] Boundary verification complete. Code non-volatile.');
-        }
-
-        // Dispatch Code to Termux
-        function dispatchToBus() {
-            const code = document.getElementById('standardOutput').value;
-            if (!code) {
-                logCLI('[ERROR] No compiled code available to dispatch.');
-                return;
-            }
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ method: 'tools/call', payload: { script: code } }));
-                logCLI('[DISPATCH] Payload sent to Termux execution node.');
-            } else {
-                logCLI('[OFFLINE DISPATCH SIMULATION] Sent payload to local console: \n' + code);
-            }
-        }
-
-        // Agent Roster Actions
-        function triggerAgent(name) {
-            logCLI(`[CREW DESK] Direct command dispatched to Agent: ${name}`);
-        }
-
-        // APK Manifest Generator
-        function generateAPKBuildSpec() {
-            const pkg = document.getElementById('apkPackage').value;
-            logCLI(`[APK LAB] Generated release manifest for ${pkg}. Ready for GitHub Actions compilation.`);
-        }
-
-        // Domain Manager
-        function bindDomain() {
-            const domain = document.getElementById('domainInput').value;
-            logCLI(`[DOMAIN MANAGER] Primary domain bound to: ${domain}`);
-            localStorage.setItem('megaplex_domain', domain);
-        }
-
-        // Helper Utilities
-        function logCLI(text) {
-            const cli = document.getElementById('cliOutput');
-            cli.innerHTML += text + '<br>';
-            cli.scrollTop = cli.scrollHeight;
-        }
-
-        function scrollToZone(id) {
+        // Navigation Tab Scrolling
+        function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        // Auto-start WebSocket on Load
-        window.onload = () => {
-            connectBus();
-            const savedDomain = localStorage.getItem('megaplex_domain');
-            if (savedDomain) document.getElementById('domainInput').value = savedDomain;
-        };
+        // Code Lab Execution Simulator
+        function runCodeLabBuild() {
+            const prompt = document.getElementById('code-prompt').value;
+            const term = document.getElementById('code-terminal');
+            term.innerHTML += `<br>[DEAN & JANUS]: Processing build request...<br>[FORGE]: Allocating resources.<br>✔ Build compiled successfully: "${prompt || 'Default Build'}".`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // APK Builder Lab Action
+        function triggerApkAction(action) {
+            const term = document.getElementById('apk-terminal');
+            term.innerHTML += `<br>[APK LAB - ${action}]: Executing native compilation and preview pipeline...`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // Tool Maker Lab
+        function runToolBuild() {
+            const term = document.getElementById('tool-terminal');
+            term.innerHTML += `<br>[TOOL MAKER]: Fabricating technological tool mechanism... Complete.`;
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // Anita Memo Logger
+        function sendAnitaMemo() {
+            const memo = document.getElementById('anita-memo').value;
+            const log = document.getElementById('anita-log');
+            log.innerHTML += `<br>[ANITA LOGGED]: "${memo}"`;
+            document.getElementById('anita-memo').value = '';
+        }
+
+        // Smart Big Screen Updater
+        function updateBigScreen() {
+            const text = document.getElementById('board-update-input').value;
+            if(text) {
+                document.getElementById('drawing-board-text').innerText = `[BROADCAST]: ${text}`;
+                document.getElementById('board-update-input').value = '';
+            }
+        }
+
+        // Briefcase & Body Sensor Handshake Simulator
+        let flatTimer = null;
+        function openBriefcase(name) {
+            document.getElementById('briefcase-status').innerHTML = `🔓 Briefcase "${name}" selected. Verifying security handshake... Place device flat to abort (5s).`;
+            
+            // Simulate Flat Device Sensor Detection (Decline Secret Handshake)
+            if(window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+            // Fallback timeout simulation
+            flatTimer = setTimeout(() => {
+                document.getElementById('briefcase-status').innerHTML = `✅ Briefcase "${name}" unlocked successfully with full payload loaded.`;
+                window.removeEventListener('deviceorientation', handleOrientation);
+            }, 3000);
+        }
+
+        function handleOrientation(event) {
+            // Beta/Gamma near 0 indicates device lying flat
+            if(Math.abs(event.beta) < 5 && Math.abs(event.gamma) < 5) {
+                clearTimeout(flatTimer);
+                window.removeEventListener('deviceorientation', handleOrientation);
+                document.getElementById('briefcase-status').innerHTML = `🛑 DECLINE SECRET HANDSHAKE DETECTED: Device held flat. Briefcase access aborted and locked!`;
+            }
+        }
+
+        // Backdoor Search Simulator
+        function runBackdoorSearch() {
+            const q = document.getElementById('backdoor-query').value;
+            document.getElementById('backdoor-results').innerText = `Searching external network for: "${q}"... [Light-duty proxy connected].`;
+        }
+
+        // Network Online/Offline Circuit Detection
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+
+        function updateConnectionStatus() {
+            const banner = document.getElementById('offline-banner');
+            if(navigator.onLine) {
+                banner.style.display = 'none';
+                document.getElementById('system-status').innerText = "4 BUSES ACTIVE | SUPER PIPELINE: ONLINE";
+            } else {
+                banner.style.display = 'block';
+                document.getElementById('system-status').innerText = "OFFLINE FALLBACK DATABASE ACTIVE";
+            }
+        }
+        updateConnectionStatus();
     </script>
 </body>
 </html>
